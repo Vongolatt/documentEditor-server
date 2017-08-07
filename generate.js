@@ -14,33 +14,29 @@ module.exports = async function (directory, title, author, id) {
   directory.map((dir) => {
     // 一级目录
       content += `* ${dir.pri_dir}\n\n`
-      for (let sec_dir of dir.sec_dir) {
+      for (let { title } of dir.sec_dir) {
        // 二级目录 
-        const path = `${dir.pri_dir}/${sec_dir}.md`
-        content += `* [${sec_dir}](${path})\n`
+        const path = `${dir.pri_dir}/${title}.md`
+        content += `* [${title}](${path})\n`
         // 生成查询列表
-        queryList.push(Article.findOne({ title: sec_dir }))
+        queryList.push(Article.findOne({ title }))
         // 保存所有二级目录路径
         pathList.push(`${summary}${path}`)
       }
       content += '\n'
   })
   const fsRead = fs.writeFile(summary + 'Summary.md', content)
+  // 写入发布文档的配置信息
   const bookSetting = fs.readJson('./public/tmps/book.json').then(obj => {
     obj.author = author
     obj.title = title
     obj.links.sidebar['文档地址'] = staticPath + 'pub/' + id
     fs.writeJSON('./public/tmps/book.json', obj)
   })
-  .catch(err => {
-    console.error(err) // Not called
-  })
   await Promise.all([fsRead, bookSetting])
   console.log('init summary success')
   Promise.all(queryList).then( (r) => {
     gitbookBuild(r, id)
-  }).catch(e => {
-    console.log(e)
   })
 }
 
