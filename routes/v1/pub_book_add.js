@@ -3,12 +3,11 @@ const Pub = require('../../models').Pub
 const async = require('async')
 const ge_book = require('../../generate')
 module.exports = function (router) {
-  router.post('/v1/article/pub', function (req, res) {
-    const title = req.body.title
-    const tag = req.body.tag || undefined
-    const directory = req.body.directory
+  router.post('/v1/pub/add', function (req, res) {
+    const { title, tag, directory } = req.body
     async.waterfall([
       function (cb) {
+        if (!tag) return cb (4030)
         if (!directory || !title) return cb(4030)
         Pub.create({ author: req.user._id, tag, amend_times: 0, directory , title }, (err, doc) => {
           if (err) return cb(5001)
@@ -17,9 +16,9 @@ module.exports = function (router) {
       },
       function (id, cb) {
         // 启动gitbook-cli
-        ge_book(directory, title, req.user.username, id).catch( e => {
+        ge_book(directory, title, req.user.username, id).catch(e => {
           console.log(e)
-        })
+        }) 
         cb(200)
       }
     ], function (status) {
