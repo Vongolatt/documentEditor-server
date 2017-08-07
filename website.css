@@ -1,0 +1,82 @@
+.book-header .btn, .book-header .btn:hover, .book-header {
+    color:#fff;    
+}
+.markdown-section {
+    background-color: #fff;
+    color: #515151;
+}
+.markdown-section h1 {
+    font-size: 22px;
+}
+.markdown-section h2 {
+    font-size: 18px;
+}
+ .book-header {
+    background-color: #DD5A3E;
+}
+.markdown-section blockquote {
+    border-color: #DD5A3E;
+}
+.markdown-section code {
+    opacity: 0.5;
+    background: #F9AF98;
+    border-radius: 2px;
+    color: #515151;
+    vertical-align: middle;
+}
+.markdown-section pre{
+    border-radius: 2px;    
+    background-color: rgba(66,66,66,.1);
+}
+.markdown-section p + pre {
+    background-color: rgba(215,83,42,0.05);
+}
+.markdown-section table {
+    text-align: center;
+    font-size: 16px;
+}
+.markdown-section table th {
+    color: #fff;
+    background-color: #F9AF98;
+    border-color: #fff;
+}
+.book-summary {
+    background-color: #F6F0E9;
+}
+.book-summary ul.summary li ul {
+    font-weight: normal;
+    padding-left: 0;
+}
+.book-summary ul.summary li a {
+    font-weight: normal;
+    text-indent: 30px;
+}
+.book-summary ul.summary li a:hover,.book-summary ul.summary li.active>a {
+    color: #fff;
+    background: #424242;
+    text-decoration: none;
+}
+.book-summary .summary> li {
+    font-size: 16px;
+    font-weight: 600;
+}
+.book-summary .summary .articles>.chapter a {
+    font-size: 14px;
+    text-indent: 58px;
+}
+li.divider,.gitbook-link {
+    display: none !important;
+}
+
+#anchor-navigation-ex-navbar li {
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
+}
+
+.markdown-section blockquote, .markdown-section dl, .markdown-section ol, .markdown-section p, .markdown-section ul{
+    font-size: 14px;
+}
+.token.string {
+    color:#3b10f0; 
+}
