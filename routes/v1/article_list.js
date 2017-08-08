@@ -11,7 +11,6 @@ module.exports = function (router) {
     const tag = req.query.tag
     let page = req.query.page
     let limit = req.query.limit
-
     async.waterfall([
       function (cb) {
         if (!page || !limit) return cb (4003)
