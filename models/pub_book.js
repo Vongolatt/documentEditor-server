@@ -13,5 +13,13 @@ pubSchema.query.Filter = function () {
     return this.populate('author', '-_id -__v -last -attempts')
            .select('-__v -amend_times')
 }
+pubSchema.statics.findByIdUpdateFilter = function (id, params) {
+  const filterParams = Object.keys(params).filter( param => {
+    return params[param] !== undefined
+  }).map( key => {
+    return { [key]: params[key] }
+  })
+  return this.findByIdAndUpdate(id, ...filterParams)
+}
 
 module.exports = mongoose.model('pub', pubSchema)
