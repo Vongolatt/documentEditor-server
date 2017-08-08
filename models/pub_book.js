@@ -9,5 +9,9 @@ const pubSchema = new Schema({
   directory: [{}],
   amend_times: { type: Number },
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
+pubSchema.query.Filter = function () {
+    return this.populate('author', '-_id -__v -last -attempts')
+           .select('-__v -amend_times')
+}
 
 module.exports = mongoose.model('pub', pubSchema)
