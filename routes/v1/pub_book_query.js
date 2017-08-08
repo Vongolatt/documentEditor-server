@@ -2,8 +2,7 @@ const Pub = require('../../models').Pub
 const waterfall =  require('async/waterfall')
 
 module.exports = router => {
-  router.get('/v1/pub/query', ({ query }, res) => {
-  const id = query.id
+  router.get('/v1/pub/query', ({ query: { id } }, res) => {
   waterfall([
     cb => {
       if (!id) return cb (4030, '参数错误')
