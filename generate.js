@@ -35,7 +35,7 @@ module.exports = async function (directory, title, author, id) {
   })
   await Promise.all([fsRead, bookSetting])
   console.log('init summary success')
-  Promise.all(queryList).then( (r) => {
+  Promise.all(queryList).then(r => {
     gitbookBuild(r, id)
   })
 }
@@ -51,13 +51,17 @@ function gitbookBuild (r, id) {
       console.log('init direction success')
       const fileList = pathList.map( (path, index) => {
       // 过滤文档内容
-      const mk_content = r[index].content.replace(/([^|])\n\|/g, '$1\n\n|').replace(/(-\s[\s\S]+?\n)/g, '$1\n')
-      // .replace(/(\n```[\u4e00-\u9fa5\w]+\n)/g, '\n$1')
-      // 写入文档内容
-      return fs.writeFile(path, mk_content).then( () => {
-        // 写入文档修改时间
-        fs.utimesSync(path, r[index].create_time, r[index].update_time)
-        })
+        try {
+          const mk_content = r[index].content.replace(/([^|])\n\|/g, '$1\n\n|').replace(/(-\s[\s\S]+?\n)/g, '$1\n')
+          // .replace(/(\n```[\u4e00-\u9fa5\w]+\n)/g, '\n$1')
+          // 写入文档内容
+          return fs.writeFile(path, mk_content).then( () => {
+            // 写入文档修改时间
+            fs.utimesSync(path, r[index].create_time, r[index].update_time)
+            })
+        } catch (e) {
+          throw new Error('发布失败')
+        }
       })
       // 所有文档写入成功后 生成gitbook
       await Promise.all(fileList)
