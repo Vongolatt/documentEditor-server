@@ -24,5 +24,6 @@ require('./v1/article_list')(router)
 // 发布文档
 require('./v1/pub_book_add')(router)
 require('./v1/pub_book_query')(router)
+require('./v1/pub_book_list')(router)
 
 module.exports = router
