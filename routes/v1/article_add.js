@@ -13,9 +13,10 @@ module.exports = function (router) {
     async.waterfall([
       function (cb) {
         if (!title) return cb(4030)       
-        Article.create({ author: req.user._id, tag, amend_times: 0, title }, (err) => {
+        Article.create({ author: req.user._id, tag, amend_times: 0, title }, err => {
           if (err) {
-            console.log(err) 
+            console.log(err)
+            if (err.code === 11000) return cb(4031) 
             return cb(5001) 
           }
           cb(200)
@@ -23,7 +24,8 @@ module.exports = function (router) {
       }
     ], (status) => {
       if (status === 5001) return res.json({ status, message: '系统错误' })
-      if (status === 4030) return res.json({ status, message: '参数错误' })        
+      if (status === 4030) return res.json({ status, message: '参数错误' })
+      if (status === 4031) return res.json({ status, message: '标题重复' })                        
       res.json({
         status: 200,
         message: '添加文章成功'

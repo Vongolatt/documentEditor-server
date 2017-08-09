@@ -2,22 +2,17 @@
  * 文章
  */
 
-const Article = require('../../models').Article
+const { Article } = require('../../models')
 const async = require('async')
 
 module.exports = function (router) {
-  router.post('/v1/article/del', (req, res) => {
-    let id = req.body.id
+  router.post('/v1/article/del', ({ body: { id } }, res) => {
     async.waterfall([
-      function (cb) {
-        if (!id) return cb(4003)
-        cb(null)
-      },
-      function (cb) {
-        Article.findOneAndRemove({ _id: id }, (err, article) => {
-          if (err) return cb(5001)
-          if (!article) return cb(5002)
-          cb(200)
+      cb => {
+        Article.findByIdAndUpdate(id, { deletedAt: new Date() }).exec( err => {
+            console.log(err)
+            if (err) return cb(5001)
+            cb(200)
         })
       }
     ], (status) => {

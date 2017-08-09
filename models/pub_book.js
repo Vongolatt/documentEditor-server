@@ -8,6 +8,7 @@ const pubSchema = new Schema({
   tag: { type: String, default: 'API', enum: ['API', 'List'] },
   directory: [{}],
   amend_times: { type: Number },
+  deletedAt: { type: Date, expires: '24h' }
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
 // 过滤输出参数
 pubSchema.query.Filter = function () {
