@@ -7,8 +7,7 @@ module.exports = function (router) {
     const { title, tag, directory } = req.body
     async.waterfall([
       function (cb) {
-        if (!tag) return cb (4030)
-        if (!directory || !title) return cb(4030)
+        if (!directory || !title || !tag) return cb(4030)
         Pub.create({ author: req.user._id, tag, amend_times: 0, directory , title }, (err, doc) => {
           if (err) return cb(5001)
           cb(null, doc._id)
