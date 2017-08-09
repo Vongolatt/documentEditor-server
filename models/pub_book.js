@@ -9,17 +9,25 @@ const pubSchema = new Schema({
   directory: [{}],
   amend_times: { type: Number },
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
+// 过滤输出参数
 pubSchema.query.Filter = function () {
     return this.populate('author', '-_id -__v -last -attempts')
            .select('-__v -amend_times')
 }
+// 过滤未定义参数
 pubSchema.statics.findByIdUpdateFilter = function (id, params) {
-  const filterParams = Object.keys(params).filter( param => {
-    return params[param] !== undefined
-  }).map( key => {
-    return { [key]: params[key] }
+  Object.keys(params).map( key => {
+    if (params[key] === undefined) delete params[key]
   })
-  return this.findByIdAndUpdate(id, ...filterParams)
+  console.log(params)
+  return this.findByIdAndUpdate(id, params)
 }
-
+// 过滤未定义ｃｏｎｄｉｔｉｏｎ
+pubSchema.statics.findFilter = function (params) {
+  Object.keys(params).map( key => {
+    if (params[key] === undefined) delete params[key]
+  })
+  console.log(params)
+  return this.find(params)
+}
 module.exports = mongoose.model('pub', pubSchema)

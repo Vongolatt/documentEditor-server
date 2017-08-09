@@ -10,8 +10,8 @@ module.exports = router => {
         cb(null)
       },
       cb => {
-        if (!author) return cb (null)
-        Pub.find({ author }).Filter().sort({ create_time: -1 }).skip(page).limit(limit).exec((err, pubs) => {
+        // if (!author) return cb (null)
+        Pub.findFilter({ author, tag }).Filter().sort({ create_time: -1 }).skip(page).limit(limit).exec((err, pubs) => {
           if (err) return cb(5020, '系统内部错误')
           cb(200, pubs)
         })
