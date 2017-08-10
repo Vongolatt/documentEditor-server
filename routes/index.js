@@ -7,7 +7,6 @@ const router = express.Router()
 
 router.use(function (req, res, next) {
   // console.log(req.isAuthenticated())
-  console.log(req.user)
   next()
 })
 // v1版本
