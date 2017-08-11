@@ -6,6 +6,7 @@ const pubSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'user' },
   title: { type: String, default: '' },
   label: { type: String, default: 'API', enum: ['API', 'List'] },
+  tag: [String],
   directory: [{}],
   amend_times: { type: Number, default: 0 },
   deletedAt: { type: Date, expires: 10 },

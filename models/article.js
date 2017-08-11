@@ -7,6 +7,7 @@ const articleSchema = new Schema({
   title: { type: String, required: true, unique: true },
   content: { type: String, default: '' },
   label: { type: String, default: 'API', enum: ['API', 'List'] },
+  tag: [String],
   amend_times: { type: Number },
   deletedAt: { type: Date, expires: 10 }
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
