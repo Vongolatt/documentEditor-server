@@ -10,5 +10,22 @@ const articleSchema = new Schema({
   amend_times: { type: Number },
   deletedAt: { type: Date, expires: 10 }
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
-
+// 过滤输出参数
+articleSchema.query.Filter = function (page, limit) {
+  return this.populate('author', '-_id -__v -last -attempts').sort({ create_time: -1 }).skip(page).limit(limit)
+}
+// 过滤未定义参数
+articleSchema.statics.findByIdUpdateFilter = function (id, params) {
+  Object.keys(params).map( key => {
+    if (params[key] === undefined) delete params[key]
+  })
+}
+// 过滤未定义ｃｏｎｄｉｔｉｏｎ
+articleSchema.statics.findFilter = function (params) {
+  Object.keys(params).map( key => {
+    if (params[key] === undefined) delete params[key]
+  })
+  console.log(params)
+  return this.find(params)
+}
 module.exports = mongoose.model('article', articleSchema)
