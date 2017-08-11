@@ -8,12 +8,12 @@ const async = require('async')
 
 module.exports = function (router) {
   router.post('/v1/article/add', (req, res) => {
-    const tag = req.body.tag || undefined
+    const label = req.body.label || undefined
     const title = req.body.title
     async.waterfall([
       function (cb) {
         if (!title) return cb(4030)       
-        Article.create({ author: req.user._id, tag, amend_times: 0, title }, err => {
+        Article.create({ author: req.user._id, label, amend_times: 0, title }, err => {
           if (err) {
             console.log(err)
             if (err.code === 11000) return cb(4031) 

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const pubSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'user' },
   title: { type: String, default: '' },
-  tag: { type: String, default: 'API', enum: ['API', 'List'] },
+  label: { type: String, default: 'API', enum: ['API', 'List'] },
   directory: [{}],
   amend_times: { type: Number, default: 0 },
   deletedAt: { type: Date, expires: 10 },

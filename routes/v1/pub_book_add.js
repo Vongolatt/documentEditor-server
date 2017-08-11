@@ -1,11 +1,11 @@
 const { Pub } = require('../../models')
 const { waterfall } = require('async')
 module.exports = function (router) {
-  router.post('/v1/pub/add', function ({ body: { tag } }, res) {
+  router.post('/v1/pub/add', function ({ body: { label } }, res) {
     waterfall([
       cb => {
-        if (!tag) return cb(4030)
-        Pub.create({ tag },err => {
+        if (!label) return cb(4030)
+        Pub.create({ label },err => {
           if (err) return cb(5001)
           cb(200)
         })

@@ -6,7 +6,7 @@ const Article = require('../../models').Article
 const async = require('async')
 
 module.exports = function (router) {
-  router.get('/v1/article/list', ({ query: { author, tag, title,limit, page } }, res) => {
+  router.get('/v1/article/list', ({ query: { author, label, title,limit, page } }, res) => {
     async.waterfall([
       function (cb) {
         if (!page || !limit) return cb (4003)
@@ -16,7 +16,7 @@ module.exports = function (router) {
       },
       function (cb) {
         const reg = new RegExp(title, 'i')
-        Article.findFilter({ author, tag, title: reg }).Filter(page, limit).exec((err, docs) => {
+        Article.findFilter({ author, label, title: reg }).Filter(page, limit).exec((err, docs) => {
           console.log(err)
           if (err) return cb(5001)
           cb(docs)

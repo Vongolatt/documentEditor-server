@@ -1,7 +1,7 @@
 const Pub = require('../../models').Pub
 const { waterfall } = require('async')
 module.exports = router => {
-  router.get('/v1/pub/list', ({ query: { author, tag, page, limit } }, res) => {
+  router.get('/v1/pub/list', ({ query: { author, label, page, limit } }, res) => {
     waterfall([
       cb => {
         if (!page || !limit) return cb (4030, '参数错误')
@@ -10,7 +10,7 @@ module.exports = router => {
         cb(null)
       },
       cb => {
-        Pub.findFilter({ author, tag }).Filter().sort({ create_time: -1 }).skip(page).limit(limit).exec((err, pubs) => {
+        Pub.findFilter({ author, label }).Filter().sort({ create_time: -1 }).skip(page).limit(limit).exec((err, pubs) => {
           if (err) return cb(5020, '系统内部错误')
           cb(200, pubs)
         })
