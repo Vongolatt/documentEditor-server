@@ -7,7 +7,7 @@ const pubSchema = new Schema({
   title: { type: String, default: '' },
   tag: { type: String, default: 'API', enum: ['API', 'List'] },
   directory: [{}],
-  amend_times: { type: Number },
+  amend_times: { type: Number, default: 0 },
   deletedAt: { type: Date, expires: 10 },
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
 // 过滤输出参数
