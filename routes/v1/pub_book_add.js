@@ -1,13 +1,25 @@
 
 const { Pub, Article } = require('../../models')
-const async = require('async')
+const { waterfall, queue } = require('async')
 const ge_book = require('../../generate')
-
+const q = queue(({ directory, title, user, id, queryList }, cb ) => {
+  ge_book(directory, title, user.username, id, queryList)
+  .then(() => {
+    cb()
+  })
+  .catch(e => {
+    cb(e)
+  })
+})
+// 监听：当所有任务都执行完以后，将调用该函数
+q.drain = function (){
+    console.log('all tasks have been processed')
+}
 module.exports = function (router) {
   router.post('/v1/pub/add', function ({ body: { title, tag, levelOne, levelTwo }, user }, res) {
     const directory = []
     const queryList = []
-    async.waterfall([
+    waterfall([
       cb => {
         if (!levelOne || !title || !tag || !levelTwo) return cb(4030)
         if (!Array.isArray(levelOne) || typeof levelTwo !== 'object') return cb(4030)
@@ -40,7 +52,6 @@ module.exports = function (router) {
             // 填入二级目录
             temdir.sec_dir.push({ title })
           })
-          console.log(temdir)
           directory.push(temdir)
         })
         cb(null)
@@ -54,9 +65,12 @@ module.exports = function (router) {
       },
       (id, cb) => {
         // 启动gitbook-cli
-        ge_book(directory, title, user.username, id, queryList).catch(e => {
-          console.log(e)
-        }) 
+        q.push({
+          directory, title, user:user.username, id, queryList
+        }, (err) => {
+          if (err) return cb(5020)
+          console.log('finish' + id )
+        })
         cb(200)
       }
     ], function (status) {

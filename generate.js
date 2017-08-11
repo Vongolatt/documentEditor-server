@@ -1,12 +1,12 @@
-const { spawn } = require('child_process')
 // const async = require('async')
 const fs = require('fs-extra')
-const summary = 'public/tmps/'
 const staticPath = require('./config').static_path
 module.exports = async function (directory, title, author, id, articles) {
+  const { spawn } = require('child_process')
+  const summary = `public/tmps/${id}`
   const pathList = []
   // 初始化安装环境
-  await fs.copy('gitbook/tmps', 'public/tmps')
+  await fs.copy('gitbook/tmps', summary)
   // 生成summary目录
   let content = '# Summary\n\n* [Introduction](README.md)\n'
   console.log(directory)
@@ -18,17 +18,17 @@ module.exports = async function (directory, title, author, id, articles) {
         const path = `${dir.pri_dir}/${title}.md`
         content += `* [${title}](${path})\n`
         // 保存所有二级目录路径
-        pathList.push(`${summary}${path}`)
+        pathList.push(`${summary}/${path}`)
       }
       content += '\n'
   })
-  const fsRead = fs.writeFile(summary + 'Summary.md', content)
+  const fsRead = fs.writeFile(`${summary}/SUMMARY.md`, content)
   // 写入发布文档的配置信息
-  const bookSetting = fs.readJson('./public/tmps/book.json').then(obj => {
+  const bookSetting = fs.readJson(`${summary}/book.json`).then(obj => {
     obj.author = author
     obj.title = title
     obj.links.sidebar['文档地址'] = staticPath + 'pub/' + id
-    fs.writeJSON('./public/tmps/book.json', obj)
+    fs.writeJSON(`${summary}/book.json`, obj)
   })
   await Promise.all([fsRead, bookSetting])
   console.log('init summary success')
@@ -36,7 +36,7 @@ module.exports = async function (directory, title, author, id, articles) {
   function gitbookBuild (r, id) {
     // 初始化目录
     const ls = spawn('gitbook',['init'],{
-      cwd: '/home/hefoni/Documents/app/public/tmps'
+      cwd: `/home/hefoni/Documents/documentEditor-server/${summary}`
     })
     ls.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`)
@@ -67,15 +67,15 @@ module.exports = async function (directory, title, author, id, articles) {
       // 所有文档写入成功后 生成gitbook
       await Promise.all(fileList)
       const cli = spawn('gitbook', ['build'], {
-        cwd: '/home/hefoni/Documents/app/public/tmps'
+        cwd: `/home/hefoni/Documents/documentEditor-server/${summary}`
       })
       cli.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`)
       })
       cli.on('close', async (code) => {
         console.log(`子进程退出码：${code}`)
-        await fs.move('public/tmps/_book', 'public/pub/' + id, { overwrite: true }),
-        await fs.emptyDir('public/tmps')
+        await fs.move(`${summary}/_book`, 'public/pub/' + id, { overwrite: true }),
+        await fs.emptyDir(`${summary}`)
         console.log('发布成功')
       })
     })
