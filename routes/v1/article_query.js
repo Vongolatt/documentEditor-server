@@ -7,8 +7,7 @@ const Article = require('../../models').Article
 const async = require('async')
 
 module.exports = function (router) {
-  router.get('/v1/article/query', (req, res) => {
-    const id = req.query.id
+  router.get('/v1/article/query', ({ query: { id } } , res) => {
     async.waterfall([
       function (cb) {
         Article.findById(id, { __v: 0, create_time: 0 }).populate('author', '-_id -__v -last -attempts').exec((err, doc) => {

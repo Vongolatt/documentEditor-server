@@ -6,11 +6,7 @@ const Article = require('../../models').Article
 const async = require('async')
 
 module.exports = function (router) {
-  router.get('/v1/article/list', (req, res) => {
-    const author = req.query.author
-    const tag = req.query.tag
-    let page = req.query.page
-    let limit = req.query.limit
+  router.get('/v1/article/list', ({ query: { author, tag, title,limit, page } }, res) => {
     async.waterfall([
       function (cb) {
         if (!page || !limit) return cb (4003)
@@ -19,21 +15,8 @@ module.exports = function (router) {
         cb(null)
       },
       function (cb) {
-        if (!author) return cb(null)
-        Article.find({ author }).populate('author', '-_id -__v -last -attempts').sort({ create_time: -1 }).skip(page).limit(limit).exec((err, docs) => {
-          if (err) return cb(5001)
-          cb(docs)
-        })
-      },
-      function (cb) {
-        if (!tag) return cb(null)
-        Article.find({ tag }).populate('author', '-_id -__v -last -attempts').sort({ create_time: -1 }).skip(page).limit(limit).exec((err, docs) => {
-          if (err) return cb(5001)
-          cb(docs)
-        })
-      },
-      function (cb) {
-        Article.find().populate('author', '-_id -__v -last -attempts').sort({ create_time: -1 }).skip(page).limit(limit).exec((err, docs) => {
+        const reg = new RegExp(title, 'i')
+        Article.findFilter({ author, tag, title: reg }).Filter(page, limit).exec((err, docs) => {
           console.log(err)
           if (err) return cb(5001)
           cb(docs)
