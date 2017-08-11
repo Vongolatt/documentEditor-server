@@ -75,7 +75,7 @@ module.exports = async function (directory, title, author, id, articles) {
       cli.on('close', async (code) => {
         console.log(`子进程退出码：${code}`)
         await fs.move(`${summary}/_book`, 'public/pub/' + id, { overwrite: true }),
-        await fs.emptyDir(`${summary}`)
+        await fs.remove(`${summary}`)
         console.log('发布成功')
       })
     })
