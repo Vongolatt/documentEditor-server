@@ -16,7 +16,7 @@ q.drain = function (){
     console.log('all tasks have been processed')
 }
 module.exports = function (router) {
-  router.post('/v1/pub/release', function ({ body: { title, id, levelOne, levelTwo }, user }, res) {
+  router.post('/v1/pub/release', function ({ body: { title, id, levelOne, levelTwo, isSave }, user }, res) {
     const directory = []
     const queryList = []
     waterfall([
@@ -60,24 +60,26 @@ module.exports = function (router) {
         Pub.findByIdAndUpdate(id, { author: user._id, $inc: { amend_times: 1 }, directory , title }, (err, doc) => {
           console.log(err)
           if (err) return cb(5001)
+          if (!doc) return cb(5020)
           cb(null, doc._id)
         })
       },
       (id, cb) => {
         // 启动gitbook-cli
+        if (isSave !== false) return cb(200, '保存成功') 
         q.push({
           directory, title, user:user.username, id, queryList
         }, (err) => {
           if (err) return cb(5020)
           console.log('finish' + id )
         })
-        cb(200)
+        cb(200, '发布成功')
       }
-    ], function (status) {
+    ], function (status, message) {
       if (status === 4030) {return res.json({ status, message: '参数错误' })}
       if (status === 5001) {return res.json({ status, message: '系统内部错误' })}
-      if (status === 5020) {return res.json({ status, message: '系统正忙，请稍后发布' })}      
-      res.json({ status, message: '发布成功' })
+      if (status === 5020) {return res.json({ status, message: '没有找到该文档' })}      
+      res.json({ status, message })
     })
   })
 }
