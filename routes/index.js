@@ -26,4 +26,7 @@ require('./v1/pub_book_query')(router)
 require('./v1/pub_book_list')(router)
 require('./v1/pub_book_release')(router)
 require('./v1/pub_book_del')(router)
+
+// 分类管理
+require('./v1/sort_add')(router)
 module.exports = router

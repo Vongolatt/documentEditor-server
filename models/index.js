@@ -12,9 +12,11 @@ mongoose.Promise = global.Promise
 const User = require('./user')
 const Article = require('./article')
 const Pub = require('./pub_book')
+const Sort = require('./sort')
 module.exports = {
   Article,
   User,
-  Pub
+  Pub,
+  Sort
 }
 

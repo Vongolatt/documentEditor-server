@@ -10,10 +10,11 @@ module.exports = function (router) {
   router.post('/v1/article/add', (req, res) => {
     const label = req.body.label || undefined
     const title = req.body.title
+    const sort = req.body.sort
     async.waterfall([
       function (cb) {
-        if (!title) return cb(4030)       
-        Article.create({ author: req.user._id, label, amend_times: 0, title }, err => {
+        if (!title || !sort) return cb(4030)       
+        Article.create({ author: req.user._id, label, amend_times: 0, title, sort }, err => {
           if (err) {
             console.log(err)
             if (err.code === 11000) return cb(4031) 

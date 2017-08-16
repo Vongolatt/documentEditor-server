@@ -8,6 +8,7 @@ const articleSchema = new Schema({
   content: { type: String, default: '' },
   label: { type: String, default: 'API', enum: ['API', 'List'] },
   tag: [String],
+  sort: { type: Schema.Types.ObjectId, ref: 'sort' },
   amend_times: { type: Number },
   deletedAt: { type: Date, expires: 10 }
 }, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
