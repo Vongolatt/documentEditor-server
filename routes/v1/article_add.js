@@ -3,7 +3,7 @@
  * 文章
  */
 
-const Article = require('../../models').Article
+const { Article, Sort } = require('../../models')
 const async = require('async')
 
 module.exports = function (router) {
@@ -14,12 +14,15 @@ module.exports = function (router) {
     async.waterfall([
       function (cb) {
         if (!title || !sort) return cb(4030)       
-        Article.create({ author: req.user._id, label, amend_times: 0, title, sort }, err => {
+        Article.create({ author: req.user._id, label, amend_times: 0, title, sort }, (err, doc) => {
           if (err) {
             console.log(err)
             if (err.code === 11000) return cb(4031) 
             return cb(5001) 
           }
+          Sort.findByIdAndUpdate(sort,{ $push: { articles: doc._id } }).exec((err, doc) => {
+            console.log(err, doc)
+          })
           cb(200)
         })
       }
