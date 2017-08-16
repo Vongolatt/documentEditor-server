@@ -2,7 +2,7 @@
  * 文章
  */
 
-const { Article } = require('../../models')
+const { Article, Recycle } = require('../../models')
 const async = require('async')
 
 module.exports = function (router) {
@@ -10,10 +10,16 @@ module.exports = function (router) {
     async.waterfall([
       cb => {
         if (!id) return cb(4003, '文章id不能为空')
-        Article.findByIdAndUpdate(id, { deletedAt: new Date() }).exec( (err, doc) => {
+        Article.findByIdAndRemove(id).exec( (err, doc) => {
+          if (err) return cb(5001, '系统错误')
+          if (!doc) return cb(5002, '没有找到文章')
+          const delArticle = doc.toObject()
+          Recycle.create(delArticle, (err, doc) => {
+            console.log(err)          
             if (err) return cb(5001, '系统错误')
-            if (!doc) return cb(5002, '没有找到文章')
-            cb(200)
+            if (!doc) return cb(5002, '删除失败')
+            cb(200)            
+          })
         })
       }
     ], (status, result) => {

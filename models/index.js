@@ -13,10 +13,12 @@ const User = require('./user')
 const Article = require('./article')
 const Pub = require('./pub_book')
 const Sort = require('./sort')
+const Recycle = require('./recycle')
 module.exports = {
   Article,
   User,
   Pub,
-  Sort
+  Sort,
+  Recycle
 }
 
