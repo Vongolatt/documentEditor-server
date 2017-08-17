@@ -22,23 +22,6 @@ module.exports = function (router) {
             cb(200)            
           })
         })
-      },
-      cb => {
-        Article.find({ _id: { $in: sort } }).exec( async (err, docs) => {
-          if (err) return cb(5001, '系统错误')
-          if (!docs || !docs.length) return cb(5002, '没有找到文章')
-          // const result = await Article.remove({ _id: { $in: sort } })
-          // if (!result.result.ok) return cb(5001, '系统错误')
-          const delArticle = docs.map(doc => {
-            return doc.toObject()
-          })
-          Recycle.create(delArticle, (err, doc) => {
-            console.log(err)          
-            if (err) return cb(5001, '系统错误')
-            if (!doc) return cb(5002, '删除失败')
-            cb(200)            
-          })
-        })
       }
     ], (status, result) => {
       if (status !== 200) return res.json({ status, message: result })

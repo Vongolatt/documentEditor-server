@@ -1,4 +1,4 @@
-const Sort = require('../../models').Sort
+const { Sort } = require('../../models')
 const { waterfall } = require('async')
 module.exports = router => {
   router.post('/v1/sort/add', ({ body: { name } }, res) => {

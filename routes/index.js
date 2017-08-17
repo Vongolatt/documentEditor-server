@@ -29,4 +29,5 @@ require('./v1/pub_book_del')(router)
 
 // 分类管理
 require('./v1/sort_add')(router)
+require('./v1/sort_del')(router)
 module.exports = router
