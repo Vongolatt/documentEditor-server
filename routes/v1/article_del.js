@@ -16,7 +16,7 @@ module.exports = function (router) {
           const delArticle = doc.toObject()
           // 从分类列表删除该文章id
           const sort = await Sort.findByIdAndUpdate(doc.sort, { $pull: { articles: doc._id } } )
-          delArticle.sort = sort.name
+          if (sort) delArticle.sort = sort.name
           cb(null, delArticle)
         })
       },
