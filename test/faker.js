@@ -1,27 +1,11 @@
 const User = require('../models').User
 const Sort = require('../models').Sort
 const Article = require('../models').Article
-// const Recycle = require('../models').Recycle
-// const Pub = require('../models').Pub
+
 // 数据元凶
 const faker = require('faker/locale/zh_CN')
 // 套路node执行顺序
 const async = require('async')
-
-// 随机数组中随机取几个元素
-// function getRandomArrayElements(arr, count) {
-//   let shuffled = arr.slice(0),
-//     i = arr.length,
-//     min = i - count,
-//     temp, index
-//   while (i-- > min) {
-//     index = Math.floor((i + 1) * Math.random())
-//     temp = shuffled[index]
-//     shuffled[index] = shuffled[i]
-//     shuffled[i] = temp
-//   }
-//   return shuffled.slice(min)
-// }
 
 async.waterfall([
   function (cb) {
@@ -38,7 +22,12 @@ async.waterfall([
       })
     }
     // 创建用户
-    User.create(arrUser)
+    User.create(arrUser, (err) => {
+      if (err) return cb(err)
+      cb(null)
+    })
+  },
+  function (cb) {
     // 分类数据填充
     const arrSort = []
     for (let m = 0; m < 10; m++) {
@@ -47,9 +36,10 @@ async.waterfall([
       })
     }
     // 创建分类
-    Sort.create(arrSort)
-    // 进入下一步
-    cb(null)
+    Sort.create(arrSort, (err) => {
+      if (err) return cb(err)
+      cb(null)
+    })
   },
   function (cb) {
     async.parallel({
@@ -69,7 +59,7 @@ async.waterfall([
         }
       },
       function (err, results) {
-        if (err) return console.log(err)
+        if (err) return cb(err)
         // 进入下一步 
         cb(null, results)
       })
@@ -99,9 +89,10 @@ async.waterfall([
       }
     }
     // 创建文章
-    Article.create(arrArticle)
-    // 进入下一步
-    cb(null, 0)
+    Article.create(arrArticle, (err) => {
+      if (err) return cb(err)
+      cb(null, 0)
+    })
   }
 ], function (err, result) {
   if (err) return console.log(err)
@@ -119,7 +110,7 @@ function getRandom (arr) {
 // 随机生成tag数组
 function randomTagArr () {
   let arr = []
-  for (var c = 0; c < Math.floor(Math.random() * 5); c++) {
+  for (var c = 1; c < Math.floor(Math.random() * 10); c++) {
     arr.push(faker.lorem.word())
   }
   return arr
