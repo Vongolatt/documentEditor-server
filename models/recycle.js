@@ -7,8 +7,10 @@ const RecycleSchema = new Schema({
   content: { type: String, default: '' },
   label: { type: String, default: 'API', enum: ['API', 'List'] },
   tag: [String],
-  sort: { type: Schema.Types.ObjectId },
+  sort: String,
   amend_times: { type: Number },
+  create_time: Date,
+  update_time: Date,
   deletedAt: { type: Date, expires: 10 }
 })
 
