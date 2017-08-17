@@ -34,4 +34,7 @@ require('./v1/sort_edit')(router)
 require('./v1/sort_list')(router)
 // 回收站
 require('./v1/recycle_list')(router)
+require('./v1/recycle_query')(router)
+require('./v1/recycle_del')(router)
+require('./v1/recycle_recover')(router)
 module.exports = router
