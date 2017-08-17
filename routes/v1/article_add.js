@@ -12,18 +12,26 @@ module.exports = function (router) {
     const title = req.body.title
     const sort = req.body.sort
     async.waterfall([
-      function (cb) {
-        if (!title || !sort) return cb(4030)       
+      cb => {
+        if (!title || !sort) return cb(4030)               
         Article.create({ author: req.user._id, label, amend_times: 0, title, sort }, (err, doc) => {
           if (err) {
             console.log(err)
-            if (err.code === 11000) return cb(4031) 
+            if (err.code === 11000) return cb(4031)
             return cb(5001) 
           }
-          Sort.findByIdAndUpdate(sort,{ $push: { articles: doc._id } }).exec((err, doc) => {
-            console.log(err, doc)
-          })
-          cb(200)
+          if (!doc) return cb(5001)
+          cb(null, doc)
+        })
+      },
+      (doc, cb) => {
+        Sort.findByIdAndUpdate(sort,{ $push: { articles: doc._id } }).exec((err, sort) => {
+          if (err) {
+            doc.remove()
+            return cb(5001)
+          }
+          if (!sort) return cb(4030)
+          cb(null) 
         })
       }
     ], (status) => {
