@@ -3,7 +3,7 @@ const Schema = require('mongoose').Schema
 const RecycleSchema = new Schema({
   _id: { type: Schema.Types.ObjectId },
   author: { type: Schema.Types.ObjectId, ref: 'user' },
-  title: { type: String, required: true },
+  title: { type: String },
   content: { type: String, default: '' },
   label: { type: String, default: 'API', enum: ['API', 'List'] },
   tag: [String],
