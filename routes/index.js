@@ -31,4 +31,5 @@ require('./v1/pub_book_del')(router)
 require('./v1/sort_add')(router)
 require('./v1/sort_del')(router)
 require('./v1/sort_edit')(router)
+require('./v1/sort_list')(router)
 module.exports = router
