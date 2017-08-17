@@ -26,12 +26,12 @@ module.exports = function (router) {
         cb(null)
       },
       cb => {
-        const titleList = []
+        const idList = []
         Object.keys(levelTwo).map( dir => {
-          titleList.push(...levelTwo[dir])
+          idList.push(...levelTwo[dir])
         })
-        const articleList = titleList.map( title => {
-          return Article.findOne({ title })
+        const articleList = idList.map( id => {
+          return Article.findById(id)
         })
         Promise.all(articleList).then( articles => {
           queryList.push(...articles)
@@ -44,13 +44,15 @@ module.exports = function (router) {
       },
       cb => {
         // 生成目录
+        let count = 0
         levelOne.map( dir1 => {
           let temdir = { pri_dir: '', sec_dir: [] }
           temdir.pri_dir = dir1
           levelTwo[dir1].map( async title => {
+            count++
             if (!title) return cb(5001)
             // 填入二级目录
-            temdir.sec_dir.push({ title })
+            temdir.sec_dir.push({ title: queryList[count].title, id: title })
           })
           directory.push(temdir)
         })
@@ -66,7 +68,7 @@ module.exports = function (router) {
       },
       (id, cb) => {
         // 启动gitbook-cli
-        if (isSave !== false) return cb(200, '保存成功') 
+        if (isSave) return cb(200, '保存成功') 
         q.push({
           directory, title, user:user.username, id, queryList
         }, (err) => {
