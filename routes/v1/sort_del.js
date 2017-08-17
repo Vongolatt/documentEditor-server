@@ -19,7 +19,9 @@ module.exports = router => {
           await Article.remove({ _id: { $in: sort.articles } })
           await sort.remove()
           const delArticle = docs.map(doc => {
-            return doc.toObject()
+            let docObj = doc.toObject()
+            docObj.sort = sort.name
+            return docObj
           })
           Recycle.create(delArticle, (err, doc) => {
             console.log(err)          
