@@ -10,6 +10,7 @@ module.exports = router => {
         })
       }
     ], (status, message) => {
+      if (status !== 200) return res.json({ status, message })
       res.json({
         status,
         data: { docs: message }
