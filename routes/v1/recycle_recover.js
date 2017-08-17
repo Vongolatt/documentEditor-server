@@ -19,6 +19,7 @@ module.exports = function (router) {
         })
       },
       (doc, cb) => {
+        if (!doc.sort) return cb(null, doc)
         Sort.findOneAndUpdate({ name: doc.sort },{ $push: { articles: doc._id } }, {
           upsert: true
         }).exec((err, sort) => {
