@@ -9,8 +9,12 @@ const pubSchema = new Schema({
   tag: [String],
   directory: [{}],
   amend_times: { type: Number, default: 0 },
-  deletedAt: { type: Date, expires: 10 },
-}, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
+}, { 
+  timestamps: { 
+    createdAt: 'create_time', 
+    updatedAt: 'update_time' 
+  } 
+})
 // 过滤输出参数
 pubSchema.query.Filter = function () {
     return this.populate('author', '-_id -__v -last -attempts')

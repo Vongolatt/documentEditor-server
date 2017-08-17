@@ -14,7 +14,7 @@ const UserSchema = new Schema({
   phone: Number,
   avatar: String,
   age: { type: Number, default: 18 },
-  articles: { type: Schema.Types.ObjectId, ref: 'article' }
+  articles: { type: Schema.Types.ObjectId }
 })
 UserSchema.plugin(passportLocalMongoose, {
   limitAttempts: 5,

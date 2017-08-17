@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const SortSchema = new Schema({
   name: { type:String, unique: true },
-  articles: [{ type: Schema.Types.ObjectId, ref: 'article' }]
+  articles: [{ type: Schema.Types.ObjectId }]
 })
 
 module.exports = mongoose.model('sort', SortSchema)

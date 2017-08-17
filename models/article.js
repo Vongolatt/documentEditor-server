@@ -8,10 +8,15 @@ const articleSchema = new Schema({
   content: { type: String, default: '' },
   label: { type: String, default: 'API', enum: ['API', 'List'] },
   tag: [String],
-  sort: { type: Schema.Types.ObjectId, ref: 'sort'},
-  amend_times: { type: Number },
-  deletedAt: { type: Date, expires: 10 }
-}, { timestamps: { createdAt: 'create_time', updatedAt: 'update_time' } })
+  sort: { type: Schema.Types.ObjectId, ref: 'sort' },
+  amend_times: { type: Number }
+}, 
+{ timestamps: 
+  { 
+    createdAt: 'create_time', 
+    updatedAt: 'update_time' 
+  } 
+})
 // 过滤输出参数
 articleSchema.query.Filter = function (page, limit) {
   return this.populate('author', '-_id -__v -last -attempts').sort({ create_time: -1 }).skip(page).limit(limit)

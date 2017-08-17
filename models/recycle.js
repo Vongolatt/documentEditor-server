@@ -10,8 +10,7 @@ const RecycleSchema = new Schema({
   sort: String,
   amend_times: { type: Number },
   create_time: Date,
-  update_time: Date,
-  deletedAt: { type: Date, expires: 10 }
+  update_time: Date
 })
 
 module.exports = mongoose.model('recycle', RecycleSchema)
