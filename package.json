@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "se": "node mongod.js"
+    "se": "node mongod.js",
+    "fake": "node test/faker.js"
   },
   "dependencies": {
     "async": "^2.5.0",
