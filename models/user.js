@@ -9,8 +9,8 @@ const LocalStrategy = require('passport-local').Strategy
 const passportLocalMongoose = require('passport-local-mongoose')
 const UserSchema = new Schema({
   username: String,
-  password: String,
-  token: String,
+  salt: String,
+  hash: String,
   phone: Number,
   avatar: String,
   age: { type: Number, default: 18 },
