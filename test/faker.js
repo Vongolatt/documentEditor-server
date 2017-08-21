@@ -14,9 +14,9 @@ async.waterfall([
     let salt = fakersalt()
     // 用户数据填充
     const arrUser = []
-    for (let n = 0; n < 10; n++) {
+    for (let n = 0; n < 5; n++) {
       arrUser.push({
-        username: faker.lorem.word(),
+        username: faker.lorem.words(),
         salt: salt,
         hash: fakerHash(salt),
         phone: Math.floor(faker.phone.phoneNumber('1##########')), // formart
@@ -47,8 +47,8 @@ async.waterfall([
   function (cb) {
     async.parallel({
         userData: function (callback) {
-          // User查询前20个
-          User.find().limit(10).exec((err, users) => {
+          // User查询前5个
+          User.find().limit(5).exec((err, users) => {
             if (err) return callback(err)
             callback(null, users)
           })
@@ -79,7 +79,7 @@ async.waterfall([
     // 文章数据填充
     const arrArticle = []
     for (let user of data.userData) {
-      for (let i = 0; i < Math.floor(Math.random() * 5); i++) {
+      for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
         arrArticle.push({
           author: user._id,
           title: faker.name.title(),
@@ -94,8 +94,34 @@ async.waterfall([
     // 创建文章
     Article.create(arrArticle, (err) => {
       if (err) return cb(err)
-      cb(null, 0)
+      cb(null, data)
     })
+  },
+  // 在分类中回填关联的文章id
+  function (data, cb) {
+    // 循环分类获得_id
+    for (let sort of data.sortData) {
+      // 根据分类_id查询文章中sort，相同的输出
+      Article.find({
+        'sort': sort._id
+      }).exec((err, artDocs) => {
+        let articleDoc = []    
+        if (err) return cb(err)
+        // 循环文章文档，保存文章id数组
+        for (let artdoc of artDocs) {
+          articleDoc.push(artdoc._id)
+        }
+        // 在相应的分类中保存文章id数组
+        Sort.findOne({
+          '_id': sort._id
+        }).exec((err, sortDoc) => {
+          if (err) return cb(err)
+            sortDoc.articles = articleDoc
+            sortDoc.save()         
+        })
+      })
+    }
+    cb(null, 0)
   }
 ], function (err, result) {
   if (err) return console.log(err)
@@ -124,6 +150,7 @@ function fakersalt () {
   let salt = crypto.randomBytes(32).toString('hex')
   return salt
 }
+
 function fakerHash (salt) {
   let hash = crypto.pbkdf2Sync('123456', salt, 25000, 512, 'sha256').toString('hex')
   return hash
