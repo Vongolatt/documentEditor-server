@@ -6,16 +6,19 @@ const Article = require('../models').Article
 const faker = require('faker/locale/zh_CN')
 // 套路node执行顺序
 const async = require('async')
+// 
+const crypto = require('crypto')
 
 async.waterfall([
   function (cb) {
+    let salt = fakersalt()
     // 用户数据填充
     const arrUser = []
-    for (let n = 0; n < 100; n++) {
+    for (let n = 0; n < 10; n++) {
       arrUser.push({
-        username: faker.name.firstName() + faker.name.lastName(),
-        password: faker.internet.password(),
-        token: faker.internet.password(),
+        username: faker.lorem.word(),
+        salt: salt,
+        hash: fakerHash(salt),
         phone: Math.floor(faker.phone.phoneNumber('1##########')), // formart
         avatar: faker.image.avatar(),
         age: faker.random.number(70)
@@ -45,7 +48,7 @@ async.waterfall([
     async.parallel({
         userData: function (callback) {
           // User查询前20个
-          User.find().limit(20).exec((err, users) => {
+          User.find().limit(10).exec((err, users) => {
             if (err) return callback(err)
             callback(null, users)
           })
@@ -114,4 +117,14 @@ function randomTagArr () {
     arr.push(faker.lorem.word())
   }
   return arr
+}
+
+// 使用固定password生产salt和hash
+function fakersalt () {
+  let salt = crypto.randomBytes(32).toString('hex')
+  return salt
+}
+function fakerHash (salt) {
+  let hash = crypto.pbkdf2Sync('123456', salt, 25000, 512, 'sha256').toString('hex')
+  return hash
 }
